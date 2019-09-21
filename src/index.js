@@ -3,6 +3,10 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
+import "bootstrap/dist/css/bootstrap.min.css";
+import './stylish-portfolio.css'
+import "./css/all.min.css"
+import "./simple-line-icons/css/simple-line-icons.css"
 
 ReactDOM.render(<App />, document.getElementById('root'));
 
