@@ -9,9 +9,12 @@ function UserLose(props) {
         alt="Mr.Ben-tryagain"
       />
       <h1 className="respon text-white">You Lose..</h1>
+      <h3 className="text-success">
+        The letter "{props.answer}" was on my mind
+      </h3>
       <button
         onClick={() => props.reset()}
-        className="btn btn-xl  btn-light js-scroll-trigge mr-4 mt-5"
+        className="btn btn-xl btn-light js-scroll-trigge mr-4 mt-5"
       >
         Play again?
       </button>

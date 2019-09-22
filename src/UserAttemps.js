@@ -7,7 +7,7 @@ function UserAttemps(props) {
         onClick={() => props.ToNull()}
         src="https://www.nicepng.com/png/full/138-1382910_mr-bean-beans-this-or-that-questions-projects.png"
         alt="Mr.Ben-tryagain"
-        className="mt-3"
+        className="menu-toggle mt-3"
       ></img>
       <h4 className="respon">{props.attemps} attempts left</h4>
       <h3>{props.choiceLocation}</h3>

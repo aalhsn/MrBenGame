@@ -149,39 +149,10 @@ class App extends Component {
     return randArr;
   };
 
-  randChoice = arr => {
-    let result = [];
-    arr.forEach(function(i, idx) {
-      let color = randColor();
-      result.push(
-        <button key={idx} className={color}>
-          {i}
-        </button>
-      );
-    });
-    let color = randColor();
-    result.push(
-      <button key={arr.length} className={color}>
-        {this.state.mrben}
-      </button>
-    );
-    return result;
-  };
-
-  arrayShuffle = function(arr) {
-    let newPos, temp;
-    for (let i = arr.length - 1; i > 0; i--) {
-      newPos = Math.floor(Math.random() * (i + 1));
-      temp = arr[i];
-      arr[i] = arr[newPos];
-      arr[newPos] = temp;
-    }
-    return arr;
-  };
-
   checkDist = choice => {
     let answerIndex = this.letterArray.indexOf(this.state.mrben);
     let choiceIndex = this.letterArray.indexOf(choice);
+    let diff = Math.abs(answerIndex - choiceIndex);
     if (answerIndex >= 0 && answerIndex <= 8) {
       this.setState({ answerLocation: "the beginning of the alphabet" });
     } else if (answerIndex >= 9 && answerIndex <= 16) {
@@ -190,17 +161,13 @@ class App extends Component {
       this.setState({ answerLocation: "the end of the alphabet" });
     }
 
-    if (answerIndex - choiceIndex <= 5 && choiceIndex - answerIndex <= 5) {
-      this.setState({ choiceLocation: "You are too close!!" });
-    } else if (
-      answerIndex - choiceIndex <= 10 &&
-      choiceIndex - answerIndex <= 10
-    ) {
-      this.setState({ choiceLocation: "Hmm.. you are close enough.." });
-    } else if (
-      answerIndex - choiceIndex > 10 &&
-      choiceIndex - answerIndex > 10
-    ) {
+    if (diff <= 3 && diff >= 1) {
+      this.setState({ choiceLocation: "You are TOO CLOSE!!" });
+    } else if (diff <= 7 && diff >= 4) {
+      this.setState({ choiceLocation: "Hmm.. okay you are close enough.." });
+    } else if (diff <= 10 && diff >= 8) {
+      this.setState({ choiceLocation: "Nah.." });
+    } else if (diff >= 11) {
       this.setState({ choiceLocation: "Hehe.. NOT close at all" });
     }
   };
@@ -225,6 +192,44 @@ class App extends Component {
     }
   };
 
+  randChoice = arr => {
+    let result = [];
+    arr.forEach((i, idx) => {
+      let color = randColor();
+      result.push(
+        <button
+          onClick={() => this.checkLetter(i, this.state.attemps)}
+          key={idx}
+          className={color}
+        >
+          {i}
+        </button>
+      );
+    });
+    let color = randColor();
+    result.push(
+      <button
+        onClick={() => this.checkLetter(this.state.mrben, this.state.attemps)}
+        key={arr.length}
+        className={color}
+      >
+        {this.state.mrben}
+      </button>
+    );
+    return result;
+  };
+
+  arrayShuffle = function(arr) {
+    let newPos, temp;
+    for (let i = arr.length - 1; i > 0; i--) {
+      newPos = Math.floor(Math.random() * (i + 1));
+      temp = arr[i];
+      arr[i] = arr[newPos];
+      arr[newPos] = temp;
+    }
+    return arr;
+  };
+
   ToNull = () => {
     this.setState({ playerStatus: "start" });
   };
@@ -240,12 +245,14 @@ class App extends Component {
         <>
           <div className="col-lg-12 mb-4 mt-3">
             <h5>Mr.Bean is thinking of one of these letters..</h5>
-            {/* fix random letter duplicates */}
             {this.arrayShuffle(
               this.randChoice(this.randLetter(this.HintLegth()))
             )}
             <br></br>
-            <p> Mr.Bean's letter is at {this.state.answerLocation} </p>
+            <h4 className="mt-3">
+              Mr.Bean's letter is at..
+              {this.state.answerLocation.toUpperCase()}!
+            </h4>
           </div>
         </>
       );
@@ -261,7 +268,7 @@ class App extends Component {
     if (this.state.playerStatus === "win") {
       return <UserWin reset={this.reset} />;
     } else if (this.state.playerStatus === "lost") {
-      return <UserLose reset={this.reset} />;
+      return <UserLose reset={this.reset} answer={this.state.mrben} />;
     } else if (this.state.playerStatus === "try") {
       return (
         <UserAttemps
@@ -298,6 +305,10 @@ class App extends Component {
 
               {this.GetHint()}
             </div>
+
+            <h4 className="text-danger mt-2">
+              {this.state.attemps} attemps left!
+            </h4>
           </div>
         </div>
       );
